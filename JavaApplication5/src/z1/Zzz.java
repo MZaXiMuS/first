@@ -6,6 +6,7 @@
 package z1;
 
 import java.awt.Color;
+import java.awt.Label;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,42 +15,61 @@ import java.util.logging.Logger;
  * @author Moncsi
  */
 
-class hatter extends Thread {
+    class hatter extends Thread {
         
-    int x,y,mx,my, xi,yi;
+    int x,y,mx,my, xi,yi, speed=2;
     java.awt.Label Irat;
+    Zzz ablak;
     
-    hatter (int a,int b,int c,int d, java.awt.Label I) {
+    
+    hatter (int a,int b,int c,int d) {
       super();
-      x=a;y=b;mx=c;my=d; xi=1; yi=1; Irat=I;
+      x=a;y=b;mx=c;my=d; xi=1; yi=1;
     }
 
+    void button(java.awt.Label label1, Zzz a) {        
+        Irat=label1;
+        ablak=a;
+    }
+        
+    
     @Override
     public void run () {
         boolean fut=true;
         while (fut) {
+            ablak.setTitle("MZaX's koords: "+x+" "+y);
+            
             x+=xi; y+=yi;
             if (x>mx || x<1) xi=-xi;
             if (y>my || y<1) yi=-yi;
             Irat.setBounds(x, y, 200, 50);
             //Irat.setForeground( new Color(x%100,100,100) );
             try {
-                Thread.sleep(2);
+                Thread.sleep(speed);
             } catch (InterruptedException ex) {
                 Logger.getLogger(hatter.class.getName()).log(Level.SEVERE, null, ex);
             }
             
         }
     }
+    public void setspd (int sp) {
+       speed=sp;
+    }
+    
 }
+
 
 public class Zzz extends javax.swing.JFrame {
 
     /**
      * Creates new form Zzz
      */
+   
+    hatter hat1= new hatter(1,1,533,350);
+
     public Zzz() {
         initComponents();
+            
     }
 
     /**
@@ -64,7 +84,9 @@ public class Zzz extends javax.swing.JFrame {
         label1 = new java.awt.Label();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("MZaX's java 0.000001a :)");
+        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -110,13 +132,23 @@ public class Zzz extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        hat1.setspd(0);
+        try {                
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Zzz.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.exit(0);
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-            hatter hat1= new hatter(1,1,533,350,label1);
-            hat1.start();
+           // hatter hat1= new hatter(1,1,533,350,label1);
+           hat1.button(label1,this);
+           hat1.start(); 
+           this.setTitle("MZaX :)");
+          
+           
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -153,7 +185,9 @@ public class Zzz extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Zzz().setVisible(true);
+               new Zzz().setVisible(true);
+               
+                
             }
             
          
