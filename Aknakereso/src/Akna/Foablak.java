@@ -7,6 +7,7 @@ package Akna;
 
 import java.awt.Button;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,18 +18,19 @@ import java.awt.event.MouseEvent;
  */
 
     class Mezo {
-        int m1,m2,bsz ,jsz,ksz; //mezőméret1-2, bombák száma, jelölés száma(?), kattintás száma
+        int m1,m2,bsz,bsz2,jsz ; //mezőméret1-2, bombák száma, 
         float fok;
         int[][] tabla;
         Button[][] btn;
         Boolean start;
         
         Mezo (int a, int b) {
-            m1=a; m2=b; start=true; bsz=0; jsz=0; ksz=0;
+            m1=a; m2=b; start=true; bsz=0; bsz2=0; jsz=0;
             tabla = new int[m1][m2];
             btn = new Button[m1][m2];
         }    
-    }
+        
+      }
 
 
 
@@ -36,6 +38,8 @@ public class Foablak extends javax.swing.JFrame {
     
     Mezo mezo;
     Button btn;
+    Boolean vege;
+    
     
     
     
@@ -74,16 +78,16 @@ public class Foablak extends javax.swing.JFrame {
             }
         });
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(20, 10, 40, 1));
-        jSpinner1.setValue(20);
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(30, 10, 50, 1));
+        jSpinner1.setValue(30);
 
         jLabel1.setText("MZaX's JávaAkna 0.1 :)");
 
-        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(20, 10, 40, 1));
-        jSpinner3.setValue(20);
+        jSpinner3.setModel(new javax.swing.SpinnerNumberModel(30, 10, 50, 1));
+        jSpinner3.setValue(30);
 
         jSpinner2.setModel(new javax.swing.SpinnerListModel(new String[] {"Kemény", "Nehéz", "Közepes", "Könnyű"}));
-        jSpinner2.setValue("Közepes");
+        jSpinner2.setValue("Könnyű");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -103,11 +107,13 @@ public class Foablak extends javax.swing.JFrame {
                                 .addComponent(jSpinner3, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(158, 158, 158)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(button3, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                                    .addComponent(jSpinner2))))
+                                .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 105, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(149, 149, 149)
+                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,9 +124,9 @@ public class Foablak extends javax.swing.JFrame {
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addComponent(button3, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
+                .addGap(22, 22, 22)
+                .addComponent(jSpinner2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -134,10 +140,10 @@ public class Foablak extends javax.swing.JFrame {
         //button2.setVisible(false);
         //button3.setVisible(false);
         
-        int i,j;
+        int i,j; vege=false;
         mezo = new Mezo((int) jSpinner1.getValue(), (int)jSpinner3.getValue());
         String s=(String) jSpinner2.getValue();
-        if (s=="Könnyű") mezo.fok=20; else if (s=="Közepes") mezo.fok=40; else if (s=="Nehéz") mezo.fok=60; else mezo.fok=80;
+        if (s=="Könnyű") mezo.fok=8; else if (s=="Közepes") mezo.fok=16; else if (s=="Nehéz") mezo.fok=30; else mezo.fok=50;
         
         this.remove(button3); this.remove(jLabel1); this.remove(jSpinner2);
         this.remove(jSpinner1); this.remove(jSpinner3);        
@@ -148,6 +154,7 @@ public class Foablak extends javax.swing.JFrame {
         for (i=0;i<mezo.m1;i++) for (j=0;j<mezo.m2;j++) {
             mezo.btn[i][j]=new Button(""); btn=mezo.btn[i][j];
             btn.setBounds(i*20,j*20,20,20);
+            btn.setFont(new Font("Courier", Font.BOLD,12));
             btn.addMouseListener(new jobbklikk());
             btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,35 +170,54 @@ public class Foablak extends javax.swing.JFrame {
         
     }//GEN-LAST:event_button3ActionPerformed
 
-  class jobbklikk  extends MouseAdapter {
+  class jobbklikk extends MouseAdapter {
     public void mouseClicked (MouseEvent e) {  
         if (e.getModifiers() == MouseEvent.BUTTON3_MASK) { 
           Object b = e.getSource(); Button bt = (Button) b;          
           String s=bt.getLabel();
-          if (s=="") {mezo.jsz++; bt.setLabel("?");} else if (s=="?") {bt.setLabel(""); mezo.jsz--;}
-          
-          if ( (mezo.jsz+mezo.ksz==mezo.m1*mezo.m2) && mezo.jsz==mezo.bsz ) { /*győzelem*/ } 
-          
+          if (s=="") { bt.setLabel("?"); mezo.jsz++;}
+          else if (s=="?") { bt.setLabel(""); mezo.jsz--;}
+         
+                    
         }
     }
   } 
-    
-    void nyomva(java.awt.event.ActionEvent evt) {
+  
+  
+   void beir (int x, int y) {
+       int i,j;
+       
+       mezo.bsz2++; int b=0;
+       for (i=-1;i<2;i++) for (j=-1;j<2;j++) 
+           if ( (i!=0||j!=0) && (x+i>=0 &&x+i<mezo.m1 && y+j>=0 && y+j<mezo.m2)) b +=mezo.tabla[x+i][y+j]; 
+       mezo.btn[x][y].setLabel(""+b);
+       if (b==0) 
+          for (i=-1;i<2;i++) for (j=-1;j<2;j++) 
+           if ( (i!=0||j!=0) &&x+i>=0 &&x+i<mezo.m1 && y+j>=0 && y+j<mezo.m2 && mezo.btn[x+i][y+j].getLabel()=="") beir(x+i,y+j);
+       
+        }
+        
+  
+  void nyomva(java.awt.event.ActionEvent evt) {
         Object b = evt.getSource(); Button bt = (Button) b;
         int x,y; x = bt.getX()/20; y = bt.getY()/20;
+        if (vege) System.exit(0);        
         if (bt.getLabel()=="") {
           if (mezo.start) { mezo.start=false;
               int i,j;
               for (i=0; i<mezo.m1; i++) for (j=0;j<mezo.m2;j++) 
                   if (i==x && j==y) mezo.tabla[i][j]=0;
                   else if (Math.random()*100>mezo.fok) mezo.tabla[i][j]=0; else
-                  {mezo.tabla[i][j]=1; mezo.bsz++;}
+                  {mezo.tabla[i][j]=1; mezo.bsz++;}              
           }
-            
-          mezo.btn[x][y].setLabel("!");
-        
-        
-        }
+          this.setTitle("MZaX's Aknák! :)  Még "+(mezo.bsz-mezo.jsz)+" db!");
+          if (mezo.tabla[x][y]==1) { //halál
+              int i,j;
+              for (i=0; i<mezo.m1; i++) for (j=0;j<mezo.m2;j++) if (mezo.tabla[i][j]==1) mezo.btn[i][j].setLabel("¤");
+              this.setTitle("Ezt buktad :)"); vege=true;
+             } else beir(x,y); 
+                      
+        } if  (mezo.m1*mezo.m2-mezo.bsz==mezo.bsz2 &&mezo.jsz==mezo.bsz) { this.setTitle("Győzelem! :)"); vege=true;}
     }
     
     
